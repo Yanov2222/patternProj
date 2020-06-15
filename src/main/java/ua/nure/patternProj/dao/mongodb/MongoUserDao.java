@@ -52,7 +52,4 @@ public class MongoUserDao implements IUserDao<User> {
         template.remove(query);
     }
 
-    public static void main(String[] args) {
-        System.out.println(User.class.getName());
-    }
 }

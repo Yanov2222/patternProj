@@ -58,6 +58,11 @@ public class User {
             return this;
         }
 
+        public UserBuilder addUuid(String uuid){
+            user.setUuid(uuid);
+            return this;
+        }
+
         public User build(){
             return user;
         }

@@ -4,17 +4,20 @@ package ua.nure.patternProj.dao.mysql.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@Setter
 public class Order {
     private int id;
     private Date orderingDate;
     private double sum;
     private String address;
     private int userId;
+    private String uuid;
 
 
     public static OrderBuilder builder() {
@@ -37,7 +40,7 @@ public class Order {
             return this;
         }
         public OrderBuilder addAddress(String address){
-            order.address = new String(order.address + "; " + address);
+            order.address = order.address + "; " + address;
             return this;
         }
         public OrderBuilder addUserId(int userId){

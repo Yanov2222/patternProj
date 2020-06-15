@@ -18,6 +18,10 @@ public class Role {
     public static class RoleBuilder{
         private Role role;
 
+        public RoleBuilder() {
+            this.role = new Role();
+        }
+
         public RoleBuilder addId(int id){
             role.id = id;
             return this;

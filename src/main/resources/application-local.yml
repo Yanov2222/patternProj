@@ -1,0 +1,27 @@
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  datasource:
+    url: jdbc:mysql://localhost:3306/mongo
+    username: root
+    password: n1TjnC2Rt3
+  data:
+    mongodb:
+      #username: root
+      #password: root
+      database: taxi
+      port: 27017
+      host: localhost
+
+server:
+  port: 8081
+
+migration:
+  mongo:
+    enabled: false
+  mysql:
+    enabled: false
+
+

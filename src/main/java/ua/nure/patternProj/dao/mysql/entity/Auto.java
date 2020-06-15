@@ -4,11 +4,13 @@ package ua.nure.patternProj.dao.mysql.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@Setter
 public class Auto {
     private int id;
     private int seats;
@@ -18,6 +20,7 @@ public class Auto {
     private int hasConditioner;
     private int hasBar;
     private int manufacturerId;
+    private String uuid;
 
 
     public static AutoBuilder builder(){
