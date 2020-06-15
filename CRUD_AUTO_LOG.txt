@@ -1,0 +1,26 @@
+Sat May 30 22:44:50 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:45:56 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.UserDao
+Sat May 30 22:45:56 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.UserDao
+Sat May 30 22:45:57 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:45:57 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:45:59 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:45:59 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:46:02 EEST 2020|| Event occured :update|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:46:02 EEST 2020|| Event occured :update|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:46:02 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:46:02 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:54:07 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.UserDao
+Sat May 30 22:54:16 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:54:17 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:54:23 EEST 2020|| Event occured :update|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:54:23 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:54:36 EEST 2020|| Event occured :create|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:54:37 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:54:39 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:54:39 EEST 2020|| Event occured :delete|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sat May 30 22:54:39 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
+Sun May 31 22:39:57 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.UserDao
+Sun May 31 22:39:57 EEST 2020|| Event occured :create|| at ua.nure.patternProj.dao.mysql.UserDao
+Sun May 31 22:59:19 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.UserDao
+Sun May 31 23:21:47 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.UserDao
+
