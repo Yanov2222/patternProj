@@ -14,4 +14,5 @@ public class AutoForm {
     private boolean hasBar;
     private String manufacturer;
     private int manufacturerId;
+    private String uuid;
 }

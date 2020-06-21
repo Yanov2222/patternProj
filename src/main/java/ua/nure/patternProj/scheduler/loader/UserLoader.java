@@ -1,6 +1,7 @@
 package ua.nure.patternProj.scheduler.loader;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -22,7 +23,12 @@ public class UserLoader {
 
     public User loadFrom(ua.nure.patternProj.dao.mongodb.entity.User entity) {
         int roleId = 0;
-        Role role = template.queryForObject("SELECT * FROM roles WHERE name = ?", new Object[]{entity.getRole()}, roleRowMapper);
+        Role role = null;
+        try {
+            role = template.queryForObject("SELECT * FROM roles WHERE role_name = ?", new Object[]{entity.getRole()}, roleRowMapper);
+        }
+        catch (EmptyResultDataAccessException e){
+        }
         if (role == null) {
             String INSERT_ROLE_SQL
                     = "insert into roles (role_name) values(?) ";

@@ -7,23 +7,38 @@ import ua.nure.patternProj.dao.mysql.entity.Auto;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class AutoDao implements IAutoDao {
+public class AutoDao implements IAutoDao<Auto> {
+    Connection con;
 
-    private static final String ADD_AUTO = "INSERT INTO auto(seats,model,price,has_baby_seat,has_conditioner,has_bar,manufacturer_id)" +
-            "VALUES (?,?,?,?,?,?,?)";
+    public AutoDao(){
+        try {
+             con = DbManager.getInstance().getConnection();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static final String ADD_AUTO = "INSERT INTO auto(seats,model,price,has_baby_seat,has_conditioner,has_bar,manufacturer_id, uuid)" +
+            "VALUES (?,?,?,?,?,?,?,?)";
     private static final String READ_ALL_AUTO = "SELECT * FROM auto";
-    private static final String GET_BY_ID = "SELECT * FROM auto WHERE id=?";
+    private static final String GET_BY_UUID = "SELECT * FROM auto WHERE uuid=?";
     private static final String UPDATE_AUTO = "UPDATE AUTO SET seats=?, model=?, price=?," +
-            "has_baby_seat=?,has_conditioner=?, has_bar=?, manufacturer_id=?";
-    private static final String DELETE_AUTO = "DELETE FROM AUTO WHERE id=?";
+            "has_baby_seat=?,has_conditioner=?, has_bar=?, manufacturer_id=? WHERE uuid=?";
+    private static final String DELETE_AUTO = "DELETE FROM AUTO WHERE uuid=?";
     private static final String SEARCH = "SELECT * FROM auto WHERE price > ? AND price < ? AND " +
             "has_baby_seat=? AND has_conditioner =? AND has_bar = ?";
 
     @Override
-    public boolean create(Auto obj) {
+    public synchronized boolean create(Auto obj) {
+        obj.setUuid(UUID.randomUUID().toString());
         try {
-            Connection con = DbManager.getInstance().getConnection();
+
+//            long startTime = System.currentTimeMillis();
+
             PreparedStatement statement = con.prepareStatement(ADD_AUTO, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, obj.getSeats());
             statement.setString(2, obj.getModel());
@@ -32,14 +47,17 @@ public class AutoDao implements IAutoDao {
             statement.setInt(5, obj.getHasConditioner());
             statement.setInt(6, obj.getHasBar());
             statement.setInt(7, obj.getManufacturerId());
+            statement.setString(8, obj.getUuid());
             statement.executeUpdate();
+
             ResultSet resultSet = statement.getGeneratedKeys();
+
+//            long endTime = System.currentTimeMillis();
+//            System.out.println("Total execution time: " + (endTime - startTime) + "ms");
             if (resultSet.next()) {
                 events.notify("create", this);
                 return true;
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -63,6 +81,7 @@ public class AutoDao implements IAutoDao {
             statement.setInt(5, obj.getHasConditioner());
             statement.setInt(6, obj.getHasBar());
             statement.setInt(7, obj.getManufacturerId());
+            statement.setString(8,obj.getUuid());
             statement.executeUpdate();
             events.notify("update",this);
         } catch (ClassNotFoundException e) {
@@ -77,7 +96,7 @@ public class AutoDao implements IAutoDao {
         try {
             Connection connection = DbManager.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(DELETE_AUTO);
-            statement.setInt(1, obj.getId());
+            statement.setString(1, obj.getUuid());
             statement.executeUpdate();
             events.notify("delete", this);
         } catch (ClassNotFoundException e) {
@@ -118,12 +137,12 @@ public class AutoDao implements IAutoDao {
     }
 
     @Override
-    public Auto getById(int id) {
+    public Auto getByUuid(String uuid) {
         Auto auto = null;
         try {
             Connection con = DbManager.getInstance().getConnection();
-            PreparedStatement statement = con.prepareStatement(GET_BY_ID);
-            statement.setInt(1, id);
+            PreparedStatement statement = con.prepareStatement(GET_BY_UUID);
+            statement.setString(1, uuid);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 auto = Auto.builder()

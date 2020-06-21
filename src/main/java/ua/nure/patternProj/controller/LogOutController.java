@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class LogOutController {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String registerUser(Model model, BindingResult result, HttpServletRequest request) {
+    public String logout(HttpServletRequest request) {
         request.getSession().invalidate();
         return "index";
     }

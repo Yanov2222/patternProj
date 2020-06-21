@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 
 @Getter
 @Setter
@@ -27,4 +28,12 @@ public class Order {
     private Collection<Auto> autos;
     @Indexed
     private String uuid;
+
+
+    public Collection<Auto> getAutos() {
+        if(autos == null){
+            autos = new HashSet<>();
+        }
+        return autos;
+    }
 }

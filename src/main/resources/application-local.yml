@@ -4,7 +4,7 @@ spring:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
   datasource:
-    url: jdbc:mysql://localhost:3306/mongo
+    url: jdbc:mysql://localhost:3306/mongo2
     username: root
     password: n1TjnC2Rt3
   data:
@@ -22,6 +22,6 @@ migration:
   mongo:
     enabled: false
   mysql:
-    enabled: false
+    enabled: true
 
 

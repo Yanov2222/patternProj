@@ -46,6 +46,10 @@ public class Auto {
             auto.model = model;
             return this;
         }
+        public AutoBuilder addUuid(String uuid) {
+            auto.uuid = uuid;
+            return this;
+        }
         public AutoBuilder addPrice(int price){
             auto.price=price;
             return this;

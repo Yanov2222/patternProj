@@ -16,6 +16,10 @@
            action="/update" modelAttribute="autoForm">
     <table>
         <tr>
+            <td><form:label path="uuid">uuid</form:label></td>
+            <td><form:input path="uuid"/></td>
+        </tr>
+        <tr>
             <td><form:label path="model">Model</form:label></td>
             <td><form:input path="model"/></td>
         </tr>
@@ -40,9 +44,10 @@
             <td><form:checkbox path="hasBar" value="a2"/></td>
         </tr>
         <tr>
-            <td><form:label path="manufacturerId">Manufaturer id</form:label></td>
-            <td><form:input path="manufacturerId"/></td>
+            <td><form:label path="manufacturer">Manufaturer</form:label></td>
+            <td><form:input path="manufacturer"/></td>
         </tr>
+
         <tr>
             <td><input type="submit" value="Submit"/></td>
         </tr>

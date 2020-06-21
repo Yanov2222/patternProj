@@ -26,43 +26,53 @@ import java.util.UUID;
 @Controller
 public class RegisterController {
 
-    private IUserDao userDao;
+    private IUserDao<User> userDao;
     private IUserDao<ua.nure.patternProj.dao.mongodb.entity.User> userMDao;
 
     @PostConstruct
     public void init() {
-        DAOFactory factory = MysqlDaoFactory.getInstance();
-        userDao = factory.getUserDao();
-        //strategy
-       // DAOFactory factory = MongoDaoFactory.getInstance();
-       // userDao = factory.getUserDao();
+//        DAOFactory factory = MysqlDaoFactory.getInstance();
+//        userDao = factory.getUserDao();
+        DAOFactory factory = MongoDaoFactory.getInstance();
+        userMDao = factory.getUserDao();
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@ModelAttribute("regFrom") RegisterForm registerForm
             , BindingResult result, ModelMap model, HttpServletRequest request) {
-        User user = User.builder()
-                .addLogin(registerForm.getLogin())
-                .addPassword(registerForm.getPassword())
-                .addName(registerForm.getName())
-                .addEmail(registerForm.getEmail())
-                .addTelephone(registerForm.getTelephone()).build();
+        /**MySQL*/
+//        User user = User.builder()
+//                .addLogin(registerForm.getLogin())
+//                .addPassword(registerForm.getPassword())
+//                .addName(registerForm.getName())
+//                .addEmail(registerForm.getEmail())
+//                .addTelephone(registerForm.getTelephone()).build();
+//        if (userDao.read(user) == null) {
+//            userDao.create(user);
+//        } else {
+//            log.warn("User already exsits!!");
+//        }
+//        request.getSession().setAttribute("user", user);
 
-//        ua.nure.patternProj.dao.mongodb.entity.User userExist = userMDao.read(ua.nure.patternProj.dao.mongodb.entity.User.builder()
-//                .login(registerForm.getLogin()).build());
-//        ua.nure.patternProj.dao.mongodb.entity.User user1 = ua.nure.patternProj.dao.mongodb.entity.User.builder()
-//                .login(registerForm.getLogin())
-//                .email(registerForm.getEmail())
-//                .name(registerForm.getName())
-//                .password(registerForm.getPassword())
-//                .telephone(registerForm.getTelephone()).build();
-//        userMDao.create(user1);
-        if (userDao.read(user) == null) {
-            userDao.create(user);
-        } else {
-            log.warn("User already exsits!!");
+
+        /**MongoDB*/
+        ua.nure.patternProj.dao.mongodb.entity.User userExist = userMDao.read(ua.nure.patternProj.dao.mongodb.entity.User.builder()
+                .login(registerForm.getLogin()).build());
+        ua.nure.patternProj.dao.mongodb.entity.User user1 = ua.nure.patternProj.dao.mongodb.entity.User.builder()
+                .login(registerForm.getLogin())
+                .email(registerForm.getEmail())
+                .name(registerForm.getName())
+                .password(registerForm.getPassword())
+                .telephone(registerForm.getTelephone()).build();
+        userMDao.create(user1);
+        if(userMDao.read(user1)==null){
+            userMDao.create(user1);
+        }else{
+            log.warn("User already exists!");
         }
-        request.getSession().setAttribute("user", user);
+        request.getSession().setAttribute("user",user1);
+
+
 
         return "index";
     }

@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.util.Date;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 public class Order {
@@ -27,6 +27,8 @@ public class Order {
     public static class OrderBuilder {
         private Order order;
 
+        public OrderBuilder(){ this.order = new Order();}
+
         public OrderBuilder addId(int id){
             order.id = id;
             return this;
@@ -40,11 +42,15 @@ public class Order {
             return this;
         }
         public OrderBuilder addAddress(String address){
-            order.address = order.address + "; " + address;
+            order.address = new String(order.address +"; " + address);
             return this;
         }
         public OrderBuilder addUserId(int userId){
             order.userId = userId;
+            return this;
+        }
+        public OrderBuilder addUuid(String uuid){
+            order.uuid = uuid;
             return this;
         }
         public Order build(){

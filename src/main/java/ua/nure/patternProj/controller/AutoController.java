@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ua.nure.patternProj.dao.DAOFactory;
 import ua.nure.patternProj.dao.IAutoDao;
 import ua.nure.patternProj.dao.IManufacturerDao;
+import ua.nure.patternProj.dao.mongodb.MongoDaoFactory;
 import ua.nure.patternProj.dao.mysql.MysqlDaoFactory;
 import ua.nure.patternProj.dao.mysql.entity.Auto;
 import ua.nure.patternProj.dao.mysql.entity.Manufacturer;
@@ -26,15 +27,20 @@ import java.util.List;
 @Slf4j
 @Controller
 public class AutoController {
-    private IAutoDao autoDao;
+    private IAutoDao<Auto> autoDao;
     private IManufacturerDao manufacturerDao;
-    private Auto snapshotAuto;
+    private ua.nure.patternProj.dao.mongodb.entity.Auto snapshotAuto;
+    private IAutoDao<ua.nure.patternProj.dao.mongodb.entity.Auto> autoMDao;
 
     @PostConstruct
     public void init() {
         DAOFactory factory = MysqlDaoFactory.getInstance();
         autoDao = factory.getAutoDao();
         manufacturerDao = factory.getManufacturerDao();
+
+        factory = MongoDaoFactory.getInstance();
+        autoMDao = factory.getAutoDao();
+
         autoDao.events.subscribe("create", new LogFileListener("CRUD_AUTO_LOG.txt"));
         autoDao.events.subscribe("read", new LogFileListener("CRUD_AUTO_LOG.txt"));
         autoDao.events.subscribe("update", new LogFileListener("CRUD_AUTO_LOG.txt"));
@@ -52,21 +58,37 @@ public class AutoController {
         int hasBabySeat = autoForm.isHasBabySeat() ? 1 : 0;
         int hasConditioner = autoForm.isHasConditioner() ? 1 : 0;
         int hasBar = autoForm.isHasBar() ? 1 : 0;
-        manufacturer = manufacturerDao.manufacturerTransaction(manufacturer);
-        if (manufacturer == null) {
-            log.warn("MANUFACTURER NOT FOUND");
-        }
-        Auto auto = Auto.builder()
-                .addModel(autoForm.getModel())
-                .addSeats(autoForm.getSeats())
-                .addPrice(autoForm.getPrice())
-                .addBabySeat(hasBabySeat)
-                .addConditioner(hasConditioner)
-                .addBar(hasBar)
-                .addManufacturerId(manufacturer.getId())
-                .build();
 
-        System.out.println(autoDao.create(auto));
+        /** MySQL */
+//        manufacturer = manufacturerDao.manufacturerTransaction(manufacturer);
+//        if (manufacturer == null) {
+//            log.warn("MANUFACTURER NOT FOUND");
+//        }
+//        Auto auto = Auto.builder()
+//                .addModel(autoForm.getModel())
+//                .addSeats(autoForm.getSeats())
+//                .addPrice(autoForm.getPrice())
+//                .addBabySeat(hasBabySeat)
+//                .addConditioner(hasConditioner)
+//                .addBar(hasBar)
+//                .addManufacturerId(manufacturer.getId())
+//                .build();
+//        autoDao.create(auto);
+
+        /** MongoDB*/
+
+
+        ua.nure.patternProj.dao.mongodb.entity.Auto auto = ua.nure.patternProj.dao.mongodb.entity.Auto.builder()
+                .model(autoForm.getModel())
+                .seats(autoForm.getSeats())
+                .price(autoForm.getPrice())
+                .hasBabySeat(hasBabySeat)
+                .hasConditioner(hasConditioner)
+                .hasBar(hasBar)
+                .manufacturer(autoForm.getManufacturer())
+                .build();
+        autoMDao.create(auto);
+
         return "index";
     }
 
@@ -76,17 +98,17 @@ public class AutoController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.GET)
-    public ModelAndView updateAuto(Model model, @RequestParam("id") int id) {
-        snapshotAuto = autoDao.getById(id);
+    public ModelAndView updateAuto(Model model, @RequestParam("uuid") String uuid) {
+        snapshotAuto = autoMDao.getByUuid(uuid);
         AutoForm form = new AutoForm();
-        form.setId(snapshotAuto.getId());
+        form.setUuid(snapshotAuto.getUuid());
         form.setModel(snapshotAuto.getModel());
         form.setPrice(snapshotAuto.getPrice());
         form.setHasBabySeat(toBool(snapshotAuto.getHasBabySeat()));
         form.setHasConditioner(toBool(snapshotAuto.getHasConditioner()));
         form.setHasBar(toBool(snapshotAuto.getHasBar()));
         form.setSeats(snapshotAuto.getSeats());
-        form.setManufacturerId(snapshotAuto.getManufacturerId());
+        form.setManufacturer(snapshotAuto.getManufacturer());
         return new ModelAndView("update", "autoForm", form);
     }
 
@@ -95,24 +117,42 @@ public class AutoController {
         int hasBabySeat = autoForm.isHasBabySeat() ? 1 : 0;
         int hasConditioner = autoForm.isHasConditioner() ? 1 : 0;
         int hasBar = autoForm.isHasBar() ? 1 : 0;
-        Auto auto = Auto.builder()
-                .addModel(autoForm.getModel())
-                .addSeats(autoForm.getSeats())
-                .addPrice(autoForm.getPrice())
-                .addBabySeat(hasBabySeat)
-                .addConditioner(hasConditioner)
-                .addBar(hasBar)
-                .addManufacturerId(autoForm.getManufacturerId())
+        /** MySQL */
+//        Auto auto = Auto.builder()
+//                .addModel(autoForm.getModel())
+//                .addSeats(autoForm.getSeats())
+//                .addPrice(autoForm.getPrice())
+//                .addBabySeat(hasBabySeat)
+//                .addConditioner(hasConditioner)
+//                .addBar(hasBar)
+//                .addManufacturerId(autoForm.getManufacturerId())
+//                .build();
+//        autoDao.update(auto);
+
+        /** MongoDB */
+        ua.nure.patternProj.dao.mongodb.entity.Auto auto = ua.nure.patternProj.dao.mongodb.entity.Auto.builder()
+                .model(autoForm.getModel())
+                .uuid(autoForm.getUuid())
+                .seats(autoForm.getSeats())
+                .price(autoForm.getPrice())
+                .hasBabySeat(hasBabySeat)
+                .hasConditioner(hasConditioner)
+                .hasBar(hasBar)
+                .manufacturer(autoForm.getManufacturer())
                 .build();
-        autoDao.update(auto);
+        autoMDao.update(auto);
         return "redirect:/catalog";
     }
 
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String deleteAuto(Model model, @RequestParam("id") int id) {
-        Auto auto = autoDao.getById(id);
-        autoDao.delete(auto);
+    public String deleteAuto(Model model, @RequestParam("uuid") String uuid) {
+        /** MySQL */
+//        Auto auto = autoDao.getByUuid(uuid);
+//        autoDao.delete(auto);
+        /** MOngoDB */
+        ua.nure.patternProj.dao.mongodb.entity.Auto auto = autoMDao.getByUuid(uuid);
+        autoMDao.delete(auto);
         return "redirect:/catalog";
     }
 
@@ -124,8 +164,15 @@ public class AutoController {
         int hasBabySeat2 = hasBabySeat ? 1 : 0;
         int hasConditioner2 = hasConditioner ? 1 : 0;
         int hasBar2 = hasBar ? 1 : 0;
-        List<Auto> list = autoDao.getAutoByParameter(minPrice, maxPrice, hasBabySeat2, hasConditioner2, hasBar2);
+        /** MySQL */
+//        List<Auto> list2 = autoDao.getAutoByParameter(minPrice, maxPrice, hasBabySeat2, hasConditioner2, hasBar2);
+//        request.getSession().setAttribute("catalog", list);
+        /** MongoDB */
+
+        List<ua.nure.patternProj.dao.mongodb.entity.Auto> list = autoMDao
+                .getAutoByParameter(minPrice, maxPrice, hasBabySeat2, hasConditioner2, hasBar2);
         request.getSession().setAttribute("catalog", list);
+
         return "catalog";
     }
 

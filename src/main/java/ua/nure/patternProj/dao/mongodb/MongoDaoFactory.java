@@ -1,6 +1,5 @@
 package ua.nure.patternProj.dao.mongodb;
 
-import org.springframework.context.annotation.Bean;
 import ua.nure.patternProj.dao.*;
 import ua.nure.patternProj.dao.mysql.entity.Order;
 import ua.nure.patternProj.dao.mysql.entity.Role;
@@ -32,7 +31,7 @@ public class MongoDaoFactory extends DAOFactory {
 
     @Override
     public GenericDAO<Role> getRoleDao() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -42,11 +41,11 @@ public class MongoDaoFactory extends DAOFactory {
 
     @Override
     public IAutoDao getAutoDao() {
-        return null;
+        return new MongoAutoDao(DbManager.getInstance().getMConnection());
     }
 
     @Override
     public IManufacturerDao getManufacturerDao() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }

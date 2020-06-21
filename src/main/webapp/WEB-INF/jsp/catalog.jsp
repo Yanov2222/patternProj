@@ -36,11 +36,11 @@
     <button type="submit">Search</button>
 </form>
 
-<c:forEach var="item" items="${catalog}">
+<c:forEach var="item" items="${non}">
 <table border="1" style="margin-top: 10px;">
     <tr>
-        <td>Id</td>
-        <td><c:out value="${item['id']}"/></td>
+        <td>UUID</td>
+        <td><c:out value="${item['uuid']}"/></td>
     </tr>
     <tr>
         <td>Model</td>
@@ -69,15 +69,15 @@
     <tr>
         <td>
             <form action="update" method="GET">
-                <input name="id" value="${item['id']}" type="hidden">
-                <button type="submit" href="/update?id=${item['id']}">Update
+                <input name="uuid" value="${item['uuid']}" type="hidden">
+                <button type="submit" href="/update?uuid=${item['uuid']}">Update
                 </button>
             </form>
         </td>
         <td>
             <form action="delete" method="POST">
-                <input name="id" value="${item['id']}" type="hidden">
-                <button type="submit" href="/delete?id=${item['id']}">Delete
+                <input name="uuid" value="${item['uuid']}" type="hidden">
+                <button type="submit" href="/delete?uuid=${item['uuid']}">Delete
                 </button>
             </form>
         </td>

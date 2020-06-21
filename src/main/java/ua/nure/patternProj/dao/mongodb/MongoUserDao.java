@@ -23,8 +23,8 @@ public class MongoUserDao implements IUserDao<User> {
 
     @Override
     public boolean create(User obj) {
-        obj.setId(UUID.randomUUID().toString());
-        obj.setRole("UNKNOWN");
+        obj.setUuid(UUID.randomUUID().toString());
+        obj.setRole("USER");
         return Optional.ofNullable(template.insert(obj)).isPresent();
     }
 

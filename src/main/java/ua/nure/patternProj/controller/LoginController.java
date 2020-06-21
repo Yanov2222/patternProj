@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ua.nure.patternProj.dao.DAOFactory;
 import ua.nure.patternProj.dao.IAutoDao;
 import ua.nure.patternProj.dao.IUserDao;
+import ua.nure.patternProj.dao.mongodb.MongoDaoFactory;
 import ua.nure.patternProj.dao.mysql.MysqlDaoFactory;
 import ua.nure.patternProj.dao.mysql.entity.Auto;
 import ua.nure.patternProj.dao.mysql.entity.User;
@@ -32,12 +33,17 @@ public class LoginController {
 
     private IUserDao<User> userDao;
     private IAutoDao autoDao;
+    private IUserDao<ua.nure.patternProj.dao.mongodb.entity.User> userMDao;
+    private IAutoDao<ua.nure.patternProj.dao.mongodb.entity.Auto> autoMDao;
 
     @PostConstruct
     public void init(){
-        DAOFactory factory = MysqlDaoFactory.getInstance();
-        userDao = factory.getUserDao();
-        autoDao = factory.getAutoDao();
+//        DAOFactory factory = MysqlDaoFactory.getInstance();
+//        userDao = factory.getUserDao();
+//        autoDao = factory.getAutoDao();
+        DAOFactory factory = MongoDaoFactory.getInstance();
+        userMDao = factory.getUserDao();
+        autoMDao = factory.getAutoDao();
         userDao.events.subscribe("create", new NotificationListener());
         userDao.events.subscribe("read", new NotificationListener());
         userDao.events.subscribe("read", new LogFileListener("sigin_in_log.txt"));
@@ -48,27 +54,45 @@ public class LoginController {
     public String register(@ModelAttribute("logForm") LoginForm loginForm
             , BindingResult result, ModelMap model, HttpServletRequest request) {
 
-        User user = User.builder()
-                .addLogin(loginForm.getLogin())
-                .addPassword(loginForm.getPassword())
+        /** MySQL */
+//        User user = User.builder()
+//                .addLogin(loginForm.getLogin())
+//                .addPassword(loginForm.getPassword())
+//                .build();
+//
+//
+//        if (userDao.read(user) != null) {
+//            User user2 = userDao.read(user);
+//            if(user2.getPassword().equals(user.getPassword())){
+//                List<Integer> shoppCart = new ArrayList<>();
+//                request.getSession().setAttribute("user",user2);
+//                request.getSession().setAttribute("shoppCart", shoppCart);
+//                return "index";
+//            }
+//        } else {
+//            log.warn("User doesn't exist!!!");
+//        }
+//        request.getSession().setAttribute("user", user);
+//
+//        List<Auto> shoppcart = new ArrayList<>();
+//        request.getSession().setAttribute("shoppCart", shoppcart);
+        /** MongoDB */
+        ua.nure.patternProj.dao.mongodb.entity.User user = ua.nure.patternProj.dao.mongodb.entity.User.builder()
+                .login(loginForm.getLogin())
+                .password(loginForm.getPassword())
                 .build();
 
-        if (userDao.read(user) != null) {
-            User user2 = userDao.read(user);
-            if(user2.getPassword().equals(user.getPassword())){
-                List<Integer> shoppCart = new ArrayList<>();
-                request.getSession().setAttribute("user",user2);
+        if (userMDao.read(user) !=null){
+            ua.nure.patternProj.dao.mongodb.entity.User user2 = userMDao.read(user);
+            if (user2.getPassword().equals(user.getPassword())){
+                List<String> shoppCart = new ArrayList<>();
+                request.getSession().setAttribute("user", user2);
                 request.getSession().setAttribute("shoppCart", shoppCart);
                 return "index";
+            }else {
+                log.warn("User doesn't exist!!!");
             }
-        } else {
-            log.warn("User doesn't exist!!!");
         }
-        request.getSession().setAttribute("user", user);
-        List<Auto> list = autoDao.getAllAuto();
-        request.getSession().setAttribute("catalog", list);
-        List<Auto> shoppcart = new ArrayList<>();
-        request.getSession().setAttribute("shoppCart", shoppcart);
 
         return "redirect:/index";
     }

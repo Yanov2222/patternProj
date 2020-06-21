@@ -12,7 +12,7 @@ import java.util.UUID;
 public class UserDao implements IUserDao<User> {
 
     private static final String READ_USER = "SELECT * FROM users WHERE login = ?";
-    private static final String CREATE_USER = "INSERT INTO users(login,password,email,user_name,telephone,status_id) VALUES (?,?,?,?,?,?)";
+    private static final String CREATE_USER = "INSERT INTO users(login,password,email,user_name,telephone,status_id, uuid) VALUES (?,?,?,?,?,?,?)";
 
 
     @Override
@@ -27,6 +27,7 @@ public class UserDao implements IUserDao<User> {
             statement.setString(4, obj.getName());
             statement.setString(5, obj.getTelephone());
             statement.setInt(6, 1);
+            statement.setString(7,obj.getUuid());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {

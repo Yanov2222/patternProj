@@ -13,7 +13,7 @@
     <li><a href="/index">Main page</a></li>
 </ol>
 <form:form method="POST"
-           action="/register" modelAttribute="logForm">
+           action="/login" modelAttribute="logForm">
     <table>
         <tr>
             <td><form:label path="login">Login</form:label></td>

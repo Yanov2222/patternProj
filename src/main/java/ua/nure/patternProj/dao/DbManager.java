@@ -29,7 +29,7 @@ public class DbManager {
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
         Connection con= DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/mydb","root","n1TjnC2Rt3");
+                "jdbc:mysql://localhost:3306/mongo2","root","n1TjnC2Rt3");
         return con; //DbManager
     }
 
