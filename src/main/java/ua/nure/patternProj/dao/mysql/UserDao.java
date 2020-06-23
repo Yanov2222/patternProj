@@ -1,11 +1,14 @@
 package ua.nure.patternProj.dao.mysql;
 
+import com.mongodb.MongoClient;
+import com.mongodb.WriteConcern;
 import lombok.extern.slf4j.Slf4j;
 import ua.nure.patternProj.dao.DbManager;
 import ua.nure.patternProj.dao.IUserDao;
 import ua.nure.patternProj.dao.mysql.entity.User;
 
 import java.sql.*;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -81,5 +84,15 @@ public class UserDao implements IUserDao<User> {
     @Override
     public void delete(User obj) {
 
+    }
+
+    @Override
+    public boolean createIntoReplica(User obj, MongoClient mongoClient, WriteConcern concern) {
+        return false;
+    }
+
+    @Override
+    public List<User> readAll(MongoClient mongoClient) {
+        return null;
     }
 }

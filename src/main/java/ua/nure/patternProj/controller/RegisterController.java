@@ -67,9 +67,16 @@ public class RegisterController {
         userMDao.create(user1);
         if(userMDao.read(user1)==null){
             userMDao.create(user1);
-        }else{
+        }else {
             log.warn("User already exists!");
         }
+
+//        if (userDao.read(user) == null) {
+//            userDao.create(user);
+//        } else {
+//            log.warn("User already exsits!!");
+//
+//        }
         request.getSession().setAttribute("user",user1);
 
 

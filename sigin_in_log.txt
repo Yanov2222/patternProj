@@ -13,4 +13,5 @@ Sat May 30 22:44:50 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao
 Sun May 31 22:39:57 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.UserDao
 Sun May 31 22:59:19 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.UserDao
 Sun May 31 23:21:47 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.UserDao
+Mon Jun 22 03:46:05 EEST 2020|| Event occured :read|| at ua.nure.patternProj.dao.mysql.AutoDao
 
