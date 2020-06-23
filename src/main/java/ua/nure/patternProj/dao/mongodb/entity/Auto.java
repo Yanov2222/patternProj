@@ -1,5 +1,6 @@
 package ua.nure.patternProj.dao.mongodb.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,15 +12,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @Builder
 @Document(collection = "auto")
+@AllArgsConstructor
 public class Auto {
     @Id
     private String id;
-    private int seats;
+    private Integer seats;
     private String model;
-    private int price;
-    private int hasBabySeat;
-    private int hasConditioner;
-    private int hasBar;
+    private Integer price;
+    private Integer hasBabySeat;
+    private Integer hasConditioner;
+    private Integer hasBar;
     private String manufacturer;
     @Indexed
     private String uuid;
