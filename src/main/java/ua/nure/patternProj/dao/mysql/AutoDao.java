@@ -15,7 +15,7 @@ public class AutoDao implements IAutoDao {
     private static final String READ_ALL_AUTO = "SELECT * FROM auto";
     private static final String GET_BY_ID = "SELECT * FROM auto WHERE id=?";
     private static final String UPDATE_AUTO = "UPDATE AUTO SET seats=?, model=?, price=?," +
-            "has_baby_seat=?,has_conditioner=?, has_bar=?, manufacturer_id=?";
+            "has_baby_seat=?,has_conditioner=?, has_bar=?, manufacturer_id=? WHERE id = ?";
     private static final String DELETE_AUTO = "DELETE FROM AUTO WHERE id=?";
     private static final String SEARCH = "SELECT * FROM auto WHERE price > ? AND price < ? AND " +
             "has_baby_seat=? AND has_conditioner =? AND has_bar = ?";
@@ -63,6 +63,7 @@ public class AutoDao implements IAutoDao {
             statement.setInt(5, obj.getHasConditioner());
             statement.setInt(6, obj.getHasBar());
             statement.setInt(7, obj.getManufacturerId());
+            statement.setInt(8, obj.getId());
             statement.executeUpdate();
             events.notify("update",this);
         } catch (ClassNotFoundException e) {

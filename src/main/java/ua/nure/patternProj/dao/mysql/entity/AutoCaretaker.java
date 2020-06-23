@@ -1,23 +1,43 @@
 package ua.nure.patternProj.dao.mysql.entity;
 
+import lombok.Getter;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+@Getter
 public class AutoCaretaker {
 
-    private Auto auto;
     private List<Auto.Memento> history;
 
-    public AutoCaretaker(Auto auto){
+    public AutoCaretaker(){
         history = new ArrayList<>();
-        this.auto = auto;
     }
 
     public void saveToHistory(Auto auto){
         history.add(auto.save());
     }
 
-    public void undo(){
+    public Auto.Memento getSnapshot(int id){
+        Auto.Memento memento = null;
+        for(Iterator<Auto.Memento> it = history.iterator(); it.hasNext();){
+            Auto.Memento m = it.next();
+            if(m.getId()==id){
+                memento = m;
+            }
+        }
+        return memento;
+    }
 
+    public void remove(int id){
+        for(Iterator<Auto.Memento> it = history.iterator(); it.hasNext();){
+            Auto.Memento m = it.next();
+            if(m.getId()==id){
+                it.remove();
+            }
+        }
     }
 }

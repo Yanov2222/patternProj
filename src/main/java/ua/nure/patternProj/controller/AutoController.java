@@ -2,6 +2,7 @@ package ua.nure.patternProj.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,12 +16,14 @@ import ua.nure.patternProj.dao.IAutoDao;
 import ua.nure.patternProj.dao.IManufacturerDao;
 import ua.nure.patternProj.dao.mysql.MysqlDaoFactory;
 import ua.nure.patternProj.dao.mysql.entity.Auto;
+import ua.nure.patternProj.dao.mysql.entity.AutoCaretaker;
 import ua.nure.patternProj.dao.mysql.entity.Manufacturer;
 import ua.nure.patternProj.form.AutoForm;
 import ua.nure.patternProj.observer.LogFileListener;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -29,6 +32,8 @@ public class AutoController {
     private IAutoDao autoDao;
     private IManufacturerDao manufacturerDao;
     private Auto snapshotAuto;
+    @Autowired
+    private AutoCaretaker caretaker;
 
     @PostConstruct
     public void init() {
@@ -76,8 +81,9 @@ public class AutoController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.GET)
-    public ModelAndView updateAuto(Model model, @RequestParam("id") int id) {
+    public ModelAndView updateAuto(Model model, @RequestParam("id") int id, HttpServletRequest request) {
         snapshotAuto = autoDao.getById(id);
+        caretaker.saveToHistory(snapshotAuto);
         AutoForm form = new AutoForm();
         form.setId(snapshotAuto.getId());
         form.setModel(snapshotAuto.getModel());
@@ -90,12 +96,37 @@ public class AutoController {
         return new ModelAndView("update", "autoForm", form);
     }
 
+    @RequestMapping(value = "/memento", method = RequestMethod.GET)
+    public String getMementos(Model model, @RequestParam("id") int id, HttpServletRequest request){
+        List<Auto.Memento> list = new ArrayList<>();
+        for(Auto.Memento a: caretaker.getHistory()){
+            if(a.getAuto().getId()== id){
+                list.add(a);
+            }
+        }
+        request.getSession().setAttribute("mementoList", list);
+        return "memento";
+    }
+
+    @RequestMapping(value = "/memento", method = RequestMethod.POST)
+    public String toVersion(Model model, @RequestParam("id") int id, HttpServletRequest request){
+        for(Auto.Memento a: caretaker.getHistory()){
+            if(a.getId() == id){
+                Auto auto = caretaker.getSnapshot(id).getAuto();
+                autoDao.update(auto);
+            }
+        }
+        caretaker.remove(id);
+        return "redirect:/catalog";
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public String updateAuto(@ModelAttribute("autoForm") AutoForm autoForm, Model model, HttpServletRequest request) {
         int hasBabySeat = autoForm.isHasBabySeat() ? 1 : 0;
         int hasConditioner = autoForm.isHasConditioner() ? 1 : 0;
         int hasBar = autoForm.isHasBar() ? 1 : 0;
         Auto auto = Auto.builder()
+                .addId(autoForm.getId())
                 .addModel(autoForm.getModel())
                 .addSeats(autoForm.getSeats())
                 .addPrice(autoForm.getPrice())

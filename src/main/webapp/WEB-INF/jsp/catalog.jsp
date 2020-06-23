@@ -81,6 +81,13 @@
                 </button>
             </form>
         </td>
+        <td>
+            <form action="memento" method="GET">
+                <input name="id" value="${item['id']}" type="hidden">
+                <button type="submit" href="/delete?id=${item['id']}">Mementos
+                </button>
+            </form>
+        </td>
     </tr>
 </table>
 </c:forEach>

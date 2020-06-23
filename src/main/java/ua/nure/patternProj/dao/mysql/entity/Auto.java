@@ -10,6 +10,7 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class Auto {
+    private static int counter = 1;
     private int id;
     private int seats;
     private String model;
@@ -83,13 +84,16 @@ public class Auto {
         this.manufacturerId = memento.getAuto().getManufacturerId();
     }
 
+    @Getter
     public class Memento{
+        private int id;
         private Date date;
         private Auto auto;
 
         private Memento(Auto obj){
             this.auto =obj;
             this.date = new Date();
+            this.id = counter++;
         }
 
         public Auto getAuto(){
